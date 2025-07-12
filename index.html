@@ -4,57 +4,188 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Khatam Al-Quran Celebration for Taymiya</title>
+    
+    <!-- External Libraries & Fonts -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.5/gsap.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cinzel+Decorative:wght@400;700&display=swap" rel="stylesheet">
+    
     <style>
-        /* Custom styles for the Arabian theme */
-        html {
-            height: 100%;
+        /* * ==============================================
+         * Base & Theming Styles
+         * ==============================================
+         */
+        :root {
+            --bg-color: #fdf6e3;
+            --bg-accent-color: #f5e5c7;
+            --gold-color: #b8860b;
+            --gold-accent-color: #c5a45d;
+            --gold-glow-color: #d4af37;
+            --text-color: #5c4033;
+            --petal-fill: #FADADD;
+            --petal-stroke: #E8A0B3;
         }
 
         body {
             margin: 0;
             font-family: 'Amiri', serif;
-            background-color: #fdf6e3; /* Base background color */
-            overflow: hidden; /* Main body does not scroll */
-            position: relative; 
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            overflow: hidden; /* Prevent body scroll; scrolling is handled by a wrapper */
+            position: relative;
         }
 
         .font-cinzel {
             font-family: 'Cinzel Decorative', cursive;
         }
 
-        /* Animated background layers */
-        .bg {
-            animation: slide 3s ease-in-out infinite alternate;
-            background-image: linear-gradient(-60deg, #f5e5c7 50%, #fdf6e3 50%);
-            bottom: 0;
-            left: -50%;
-            opacity: .5;
-            position: fixed;
-            right: -50%;
-            top: 0;
-            z-index: -1;
+        .text-gold {
+            color: var(--gold-color);
         }
 
-        .bg2 {
+        /* * ==============================================
+         * Animated Background
+         * ==============================================
+         */
+        .bg-layer {
+            position: fixed;
+            top: 0;
+            left: -50%;
+            right: -50%;
+            bottom: 0;
+            opacity: 0.5;
+            z-index: -1;
+            background-image: linear-gradient(-60deg, var(--bg-accent-color) 50%, var(--bg-color) 50%);
+            animation: slide 3s ease-in-out infinite alternate;
+        }
+        .bg-layer-2 {
             animation-direction: alternate-reverse;
             animation-duration: 4s;
         }
-
-        .bg3 {
+        .bg-layer-3 {
             animation-duration: 5s;
         }
-
         @keyframes slide {
             0% { transform: translateX(-25%); }
             100% { transform: translateX(25%); }
         }
-        
-        /* This is the main wrapper that handles all scrolling */
+
+        /* * ==============================================
+         * Falling Petals
+         * ==============================================
+         */
+        .petal-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+        #petal-container-front {
+            z-index: 20; /* In front of the card */
+        }
+        .petal {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            fill: var(--petal-fill);
+            stroke: var(--petal-stroke);
+            stroke-width: 0.5px;
+            opacity: 0.9;
+        }
+        .petal.front {
+            filter: blur(2px); /* Out-of-focus effect */
+        }
+
+        /* * ==============================================
+         * Envelope & Opening Animation
+         * ==============================================
+         */
+        .envelope-wrapper {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 30;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+        .animated-mail {
+            position: relative;
+            width: 200px;
+            height: 150px;
+        }
+        .animated-mail > div {
+            position: absolute;
+        }
+        .animated-mail .body {
+            bottom: 0;
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-width: 0 0 100px 200px;
+            border-color: transparent transparent var(--gold-glow-color) transparent;
+            z-index: 2;
+        }
+        .animated-mail .top-fold {
+            top: 50px;
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-width: 50px 100px 0 100px;
+            border-color: var(--gold-accent-color) transparent transparent transparent;
+            transform-origin: 50% 0%;
+            z-index: 2;
+        }
+        .animated-mail .back-fold {
+            bottom: 0;
+            width: 200px;
+            height: 100px;
+            background: #e6d4b7;
+            z-index: 0;
+        }
+        .animated-mail .left-fold {
+            bottom: 0;
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-width: 50px 0 50px 100px;
+            border-color: transparent transparent transparent #e6d4b7;
+            z-index: 2;
+        }
+        .animated-mail .letter {
+            left: 20px;
+            bottom: 0;
+            width: 160px;
+            height: 60px;
+            background: white;
+            z-index: 1;
+            overflow: hidden;
+            background-image: url('https://www.transparenttextures.com/patterns/paper-fibers.png');
+        }
+        .click-indicator {
+            margin-top: 20px;
+            color: var(--gold-color);
+            font-size: 1.1rem;
+            animation: pulse 2s infinite alternate;
+        }
+        @keyframes pulse {
+            from { transform: scale(1); opacity: 0.7; }
+            to { transform: scale(1.05); opacity: 1; }
+        }
+
+        /* * ==============================================
+         * Main Content & Invitation Card
+         * ==============================================
+         */
         #main-scroll-wrapper {
             position: relative;
             z-index: 10;
@@ -62,225 +193,79 @@
             overflow-y: auto;
             overflow-x: hidden;
             opacity: 0; /* Initially hidden */
-            pointer-events: none;
+            pointer-events: none; /* Initially non-interactive */
         }
-
-        /* Containers for the petals are fixed to the viewport for parallax effect */
-        .petal-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            height: 100%;
-            width: 100%;
-            pointer-events: none;
-        }
-
-        #petal-container-back { z-index: 1; }
-        #petal-container-front { z-index: 20; } /* In front of the card */
-
-        /* Styling for a single petal SVG */
-        .petal {
-            position: absolute;
-            width: 20px;
-            height: 20px;
-            fill: #FADADD; /* Sakura pink color */
-            stroke: #E8A0B3; /* Darker pink stroke */
-            stroke-width: 0.5px;
-            opacity: 0.9;
-        }
-
-        .petal.front {
-            filter: blur(2px); /* Out-of-focus effect for foreground petals */
-        }
-
-        /* --- Envelope Animation Styling --- */
-        .envelope-wrapper {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column; /* To stack envelope and indicator */
-            min-height: 100vh;
-            position: fixed;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            z-index: 30;
-            cursor: pointer;
-        }
-
-        .letter-image {
-            position: relative;
-            width: 200px;
-            height: 150px;
-        }
-
-        .animated-mail {
-            position: absolute;
-            height: 150px;
-            width: 200px;
-        }
-
-        .animated-mail .body {
-            position: absolute;
-            bottom: 0;
-            width: 0;
-            height: 0;
-            border-style: solid;
-            border-width: 0 0 100px 200px;
-            border-color: transparent transparent #d4af37 transparent; /* Gold color */
-            z-index: 2;
-        }
-
-        .animated-mail .top-fold {
-            position: absolute;
-            top: 50px;
-            width: 0;
-            height: 0;
-            border-style: solid;
-            border-width: 50px 100px 0 100px;
-            transform-origin: 50% 0%;
-            border-color: #c5a45d transparent transparent transparent; /* Darker gold */
-            z-index: 2;
-        }
-
-        .animated-mail .back-fold {
-            position: absolute;
-            bottom: 0;
-            width: 200px;
-            height: 100px;
-            background: #e6d4b7; /* Creamy gold */
-            z-index: 0;
-        }
-
-        .animated-mail .left-fold {
-            position: absolute;
-            bottom: 0;
-            width: 0;
-            height: 0;
-            border-style: solid;
-            border-width: 50px 0 50px 100px;
-            border-color: transparent transparent transparent #e6d4b7; /* Creamy gold */
-            z-index: 2;
-        }
-
-        .animated-mail .letter {
-            left: 20px;
-            bottom: 0px;
-            position: absolute;
-            width: 160px;
-            height: 60px;
-            background: #fff;
-            z-index: 1;
-            overflow: hidden;
-            background-image: url('https://www.transparenttextures.com/patterns/paper-fibers.png');
-        }
-        
-        .click-indicator {
-            margin-top: 20px;
-            font-family: 'Amiri', serif;
-            color: #b8860b;
-            font-size: 1.1rem;
-            animation: pulse 2s infinite alternate;
-        }
-
-        @keyframes pulse {
-            from {
-                transform: scale(1);
-                opacity: 0.7;
-            }
-            to {
-                transform: scale(1.05);
-                opacity: 1;
-            }
-        }
-
-        /* Main invitation card positioning */
-        .invitation-card-wrapper {
+        .invitation-card-container {
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 2rem;
-            position: relative; /* Part of the scroll flow */
-            z-index: 10;
         }
-
         .invitation-card {
             position: relative;
-            border: 4px double #c5a45d;
-            background-color: rgba(253, 246, 227, .65); 
+            border: 4px double var(--gold-accent-color);
+            background-color: rgba(253, 246, 227, 0.65);
             background-image: url('https://www.transparenttextures.com/patterns/paper-fibers.png');
             backdrop-filter: blur(8px);
             -webkit-backdrop-filter: blur(8px);
-            color: #5c4033;
-            max-width: 90%;
-            width: 100%;
+            width: 90%;
             max-width: 500px;
         }
-        
-        /* Text and decorative styles */
-        .text-gold { color: #b8860b; }
-
-        .bismillah {
-            font-size: 2rem; /* Increased size for Arabic script */
-            letter-spacing: 1px;
-            animation: glow 3s infinite alternate;
-        }
-
-        @keyframes glow {
-            from { text-shadow: 0 0 4px #d4af37, 0 0 8px #d4af37; }
-            to { text-shadow: 0 0 12px #d4af37, 0 0 20px #d4af37; }
-        }
-
-        .decorative-line {
-            height: 1px;
-            background: linear-gradient(to right, transparent, #c5a45d, transparent);
-            margin: 1rem auto;
-        }
-        
         .card-content {
             padding: 2rem;
             text-align: center;
         }
+        .bismillah {
+            font-size: 2rem;
+            letter-spacing: 1px;
+            animation: glow 3s infinite alternate;
+        }
+        @keyframes glow {
+            from { text-shadow: 0 0 4px var(--gold-glow-color), 0 0 8px var(--gold-glow-color); }
+            to { text-shadow: 0 0 12px var(--gold-glow-color), 0 0 20px var(--gold-glow-color); }
+        }
+        .decorative-line {
+            height: 1px;
+            background: linear-gradient(to right, transparent, var(--gold-accent-color), transparent);
+            margin: 1rem auto;
+            width: 75%;
+        }
     </style>
 </head>
 <body>
-    <!-- Animated background elements (fixed) -->
-    <div class="bg"></div>
-    <div class="bg bg2"></div>
-    <div class="bg bg3"></div>
 
-    <!-- Petal Containers for depth (fixed) -->
+    <!-- Animated background layers -->
+    <div class="bg-layer"></div>
+    <div class="bg-layer bg-layer-2"></div>
+    <div class="bg-layer bg-layer-3"></div>
+
+    <!-- Containers for falling petals -->
     <div id="petal-container-back" class="petal-container"></div>
     <div id="petal-container-front" class="petal-container"></div>
 
-    <!-- Envelope is fixed on top of everything initially -->
+    <!-- Envelope overlay, shown on page load -->
     <div class="envelope-wrapper" id="envelope-wrapper">
-        <div class="letter-image">
-            <div class="animated-mail">
-                <div class="back-fold"></div>
-                <div class="letter"></div>
-                <div class="top-fold"></div>
-                <div class="body"></div>
-                <div class="left-fold"></div>
-            </div>
+        <div class="animated-mail">
+            <div class="back-fold"></div>
+            <div class="letter"></div>
+            <div class="top-fold"></div>
+            <div class="body"></div>
+            <div class="left-fold"></div>
         </div>
         <div class="click-indicator">Click to Open</div>
     </div>
 
-    <!-- The main scrollable area, initially hidden -->
+    <!-- Main scrollable content, hidden until envelope is opened -->
     <div id="main-scroll-wrapper">
-        <!-- The actual invitation card that will be revealed -->
-        <div class="invitation-card-wrapper" id="invitation-card-wrapper">
+        <div class="invitation-card-container">
             <div class="invitation-card rounded-xl">
                 <div class="card-content">
-                    <!-- Bismillah Header -->
+                    
                     <h2 class="bismillah text-gold mb-6" dir="rtl">
                         بِسْمِ اللهِ الرَّحْمٰنِ الرَّحِيْمِ
                     </h2>
 
-                    <!-- Invitation Text -->
                     <p class="text-lg md:text-xl leading-relaxed mb-4">
                         You are cordially invited to
                     </p>
@@ -291,10 +276,9 @@
                     <h1 class="text-2xl md:text-3xl font-bold text-gold font-cinzel tracking-wider mb-6">
                         Quran Completion Party
                     </h1>
-        
-                    <div class="decorative-line w-3/4"></div>
+            
+                    <div class="decorative-line"></div>
 
-                    <!-- Event Details -->
                     <div class="space-y-6 text-lg md:text-xl mt-8">
                         <div>
                             <strong class="text-gold font-bold block mb-1">Date</strong>
@@ -310,9 +294,8 @@
                         </div>
                     </div>
 
-                    <div class="decorative-line w-3/4 mt-8"></div>
+                    <div class="decorative-line mt-8"></div>
 
-                    <!-- Footer Message -->
                     <p class="mt-8 text-base">
                         Your presence would be a great honor.
                     </p>
@@ -323,73 +306,50 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            // --- Element Selections ---
             const envelopeWrapper = document.getElementById('envelope-wrapper');
             const mainScrollWrapper = document.getElementById('main-scroll-wrapper');
             const invitationCard = document.querySelector('.invitation-card');
-            const animatedMail = envelopeWrapper.querySelector('.animated-mail');
-            const topFold = envelopeWrapper.querySelector('.top-fold');
-            const letter = envelopeWrapper.querySelector('.letter');
-            const clickIndicator = envelopeWrapper.querySelector('.click-indicator');
+            const backPetalContainer = document.getElementById('petal-container-back');
+            const frontPetalContainer = document.getElementById('petal-container-front');
 
+            // --- State ---
             let animationPlayed = false;
+            const petalSVG = `<svg class="petal" viewBox="0 0 20 20"><path d="M10 0 C5 5, 5 15, 10 20 C15 15, 15 5, 10 0 Z"></path></svg>`;
 
-            envelopeWrapper.addEventListener('click', () => {
+            // --- Functions ---
+
+            /**
+             * Handles the entire opening animation sequence.
+             */
+            function openEnvelope() {
                 if (animationPlayed) return;
                 animationPlayed = true;
 
                 const tl = gsap.timeline();
 
-                // 1. Fade out the click indicator
-                tl.to(clickIndicator, {
-                    opacity: 0,
-                    duration: 0.3
-                });
+                tl.to('.click-indicator', { opacity: 0, duration: 0.3 })
+                  .to('.top-fold', { rotationX: 180, duration: 0.4, ease: 'power2.inOut' }, 0)
+                  .to('.letter', { y: -70, duration: 0.4, ease: 'power2.inOut' }, '<0.2')
+                  .to('.animated-mail', { scale: 0.3, opacity: 0, duration: 0.5, ease: 'power2.in' }, '>-0.1')
+                  .set(envelopeWrapper, { display: 'none' })
+                  .to(mainScrollWrapper, { opacity: 1, duration: 0.1 })
+                  .set(mainScrollWrapper, { pointerEvents: 'auto' })
+                  .from(invitationCard, {
+                      y: "-25vh",
+                      scale: 0.2,
+                      opacity: 0,
+                      duration: 0.6,
+                      ease: 'power3.out'
+                  });
+            }
 
-                // 2. Open flap and slide letter up
-                tl.to(topFold, {
-                    rotationX: 180,
-                    duration: 0.4,
-                    ease: 'power2.inOut'
-                }, 0) // Start at the same time as indicator fade
-                .to(letter, {
-                    y: -70,
-                    duration: 0.4,
-                    ease: 'power2.inOut'
-                }, '-=0.2');
-
-                // 3. Fade out envelope
-                tl.to(animatedMail, {
-                    scale: 0.3,
-                    opacity: 0,
-                    duration: 0.5,
-                    ease: 'power2.in'
-                }, '-=0.1');
-
-                // 4. Hide envelope wrapper and show the main scrollable content
-                tl.set(envelopeWrapper, { display: 'none' })
-                 .to(mainScrollWrapper, { opacity: 1, duration: 0.1 })
-                 .set(mainScrollWrapper, { pointerEvents: 'auto' });
-
-                // 5. Zoom in the final invitation card FROM the letter's position
-                tl.from(invitationCard, {
-                    y: "-25vh", // Start from where the letter came out
-                    scale: 0.2, // Start at a small scale
-                    opacity: 0,
-                    duration: 0.6,
-                    ease: 'power3.out'
-                });
-            });
-
-
-            // --- Falling Petals Animation ---
-            const backContainer = document.getElementById('petal-container-back');
-            const frontContainer = document.getElementById('petal-container-front');
-            
-            const petalSVG = `<svg class="petal" viewBox="0 0 20 20"><path d="M10 0 C5 5, 5 15, 10 20 C15 15, 15 5, 10 0 Z"></path></svg>`;
-
+            /**
+             * Creates a single falling petal and animates it.
+             */
             function createFallingPetal() {
                 const isFront = Math.random() < 0.15;
-                const container = isFront ? frontContainer : backContainer;
+                const container = isFront ? frontPetalContainer : backPetalContainer;
                 
                 const petalWrapper = document.createElement('div');
                 petalWrapper.innerHTML = petalSVG;
@@ -401,6 +361,7 @@
                 
                 container.appendChild(petal);
                 
+                // Set initial random properties
                 gsap.set(petal, {
                     x: gsap.utils.random(0, window.innerWidth),
                     y: -50,
@@ -408,11 +369,11 @@
                     scale: isFront ? gsap.utils.random(5, 9) : gsap.utils.random(0.7, 1.5),
                 });
 
-                const tlPetal = gsap.timeline({
-                    onComplete: () => petal.remove()
-                });
+                // Create the animation timeline for the petal
+                const tlPetal = gsap.timeline({ onComplete: () => petal.remove() });
                 const fallDuration = gsap.utils.random(5, 10);
 
+                // Gentle side-to-side swaying motion
                 const swayTween = gsap.to(petal, {
                     x: `+=${gsap.utils.random(-100, 100)}`,
                     rotation: `+=${gsap.utils.random(-45, 45)}`,
@@ -422,17 +383,18 @@
                     ease: "sine.inOut"
                 });
                 
+                // Animate the fall from top to bottom
                 tlPetal.to(petal, {
                     y: window.innerHeight + 100,
                     duration: fallDuration,
                     ease: "none",
-                    onComplete: () => {
-                        swayTween.kill();
-                    }
+                    onComplete: () => swayTween.kill() // Stop the sway when the fall is complete
                 });
             }
-            
-            setInterval(createFallingPetal, 200);
+
+            // --- Event Listeners & Timers ---
+            envelopeWrapper.addEventListener('click', openEnvelope);
+            setInterval(createFallingPetal, 200); // Continuously create new petals
         });
     </script>
 </body>
